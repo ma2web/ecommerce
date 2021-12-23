@@ -1,0 +1,5 @@
+{
+    "PORT": 7070,
+    "mongoURI": "mongodb://localhost:27017/pipe",
+    "jwtSecret": "zxcasdqwe123!@#$%^&&(()*&^%$##@$Yuihsnd"
+}
