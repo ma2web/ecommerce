@@ -12,8 +12,10 @@ exports.modules = {
     }),
   initApp: () => {
     let dirs = [
-      "public/uploads/users",
-      "public/uploads/products",
+      "public/uploads/admin/category",
+      "public/uploads/admin/product",
+      "public/uploads/customer",
+      "public/uploads/slider",
     ];
 
     for (dir of dirs) {

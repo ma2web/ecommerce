@@ -1,20 +1,58 @@
-const mongoose = require('mongoose');
-const { s, rs, n, rb, ref } = require('../utils/mongo');
+const mongoose = require("mongoose");
+const { s, rs, n, rn, ref, rref } = require("../utils/mongo");
 
-const schema = new mongoose.Schema(
+let sizeSchema = new mongoose.Schema(
   {
-    name: rs,
-    long_description: rs,
-    short_description: rs,
-    in_stock: { ...rb, default: true },
-    brand: s,
-    sku: s,
-    price: n,
-    owner: rs,
-    images: [s],
-    categories: [ref('category')],
+    size: {
+      ...rs,
+      enum: ["large", "normal", "small"],
+    },
+    price: rn,
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('product', schema);
+let commentSchema = new mongoose.Schema(
+  {
+    user: rref("user"),
+    body: rs,
+    rate: {
+      ...n,
+      default: 0,
+      enum: [0, 1, 2, 3, 4, 5],
+    },
+  },
+  { timestamps: true }
+);
+
+let schema = new mongoose.Schema(
+  {
+    user: rref("user"),
+    name: rs,
+    description: s,
+    images: [s],
+    price: rn,
+    discount: n,
+    sizes: [sizeSchema],
+    categories: [ref("category")],
+    tags: [s],
+    comments: [commentSchema],
+    rating: n,
+    inStock: {
+      type: Boolean,
+      default: true,
+    },
+    stock: n,
+    sold: {
+      ...n,
+      default: 0,
+    },
+    view: {
+      ...n,
+      default: 0,
+    },
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("product", schema);

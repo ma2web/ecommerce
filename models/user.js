@@ -1,29 +1,47 @@
-const mongoose = require('mongoose');
-const { s, rs, rn, n } = require('../utils/mongo');
-const config = require('config');
-const jwt = require('jsonwebtoken');
+const mongoose = require("mongoose");
+const { s, rs, rn, n } = require("../utils/mongo");
+const config = require("config");
+const jwt = require("jsonwebtoken");
 
-const schema = new mongoose.Schema(
+var schema = new mongoose.Schema(
   {
-    first_name: s,
-    last_name: s,
-    age: n,
-    username: {
-      ...s,
-      unique: true,
-    },
-    email: {
-      ...s,
+    firstName: s,
+    lastName: s,
+    username: s,
+    name: s,
+    email: s,
+    countryCode: n,
+    phoneNumber: {
+      ...n,
       unique: true,
     },
     password: s,
+    address: [
+      {
+        type: {
+          ...s,
+          default: "home",
+        },
+        countryCode: n,
+        phoneNumber: n,
+        address: s,
+      },
+    ],
+    currentAddress: s,
     role: {
       ...s,
-      default: 'user',
-      enum: ['super_admin', 'admin', 'user'],
+      default: "user",
+      enum: ["super_admin", "admin", "user"],
     },
-    socket_id: s,
+    active: Boolean,
+    socketId: s,
     avatar: s,
+    store: {
+      name: s,
+      description: s,
+      address: s,
+      rating: n,
+    },
   },
   { timestamps: true }
 );
@@ -31,17 +49,20 @@ const schema = new mongoose.Schema(
 schema.methods.generateAuthToken = function () {
   const data = {
     _id: this._id,
-    first_name: this.first_name,
-    last_name: this.last_name,
-    age: this.age,
-    username: this.username,
+    firstName: this.firstName,
+    lastName: this.lastName,
     email: this.email,
+    countryCode: this.countryCode,
+    phoneNumber: this.phoneNumber,
+    address: this.address,
     role: this.role,
-    socket_id: this.socket_id,
+    socketId: this.socketId,
+    store: this.store,
+    currentAddress: this.currentAddress,
     avatar: this.avatar,
   };
 
-  return jwt.sign(data, config.get('jwtSecret'));
+  return jwt.sign(data, config.get("jwtSecret"));
 };
 
-module.exports = mongoose.model('user', schema);
+module.exports = mongoose.model("user", schema);
