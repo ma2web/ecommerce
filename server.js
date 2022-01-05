@@ -91,7 +91,7 @@ mongoose.connect(
   () => console.log("DB Conected")
 );
 
-const port = 8989;
+const port = 7070;
 
 server.listen(port, (err) => {
   if (err) console.log(err.message);

@@ -17,6 +17,7 @@ const {
   removeAddress,
   userComments,
   sendCodeToUsers,
+  getAllUsers,
 } = require("../controllers/user");
 const auth = require("../middlwares/auth");
 const admin = require("../middlwares/admin");
@@ -37,5 +38,6 @@ router.put("/api/user/address/edit/:addressId/:userId", editAddress);
 router.delete("/api/user/address/remove/:addressId/:userId", removeAddress);
 router.post("/api/user/register-with-phone", registerWithPhoneNumber);
 router.get("/api/stores", getAllStores);
+router.get("/api/users", getAllUsers);
 
 module.exports = router;
