@@ -24,6 +24,7 @@ const Chat = require("./models/chat");
 const Order = require("./models/order");
 const FavoriteRoutes = require("./routes/favorite");
 const ChatRoutes = require("./routes/chat");
+const PlanRoutes = require("./routes/plan");
 
 // init app
 const app = express();
@@ -55,6 +56,7 @@ app.use(CardRoutes);
 app.use(CardRoutes);
 app.use(FavoriteRoutes);
 app.use(ChatRoutes);
+app.use(PlanRoutes);
 
 // error middleware
 app.use(ErrorMiddleware);
