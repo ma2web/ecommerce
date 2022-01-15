@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
-const { s, rs, n, rn, ref, rref } = require("../utils/mongo");
+const mongoose = require('mongoose');
+const { s, rs, n, rn, ref, rref } = require('../utils/mongo');
 
 let sizeSchema = new mongoose.Schema(
   {
     size: {
       ...rs,
-      enum: ["large", "normal", "small"],
+      enum: ['large', 'normal', 'small'],
     },
     price: rn,
   },
@@ -14,7 +14,7 @@ let sizeSchema = new mongoose.Schema(
 
 let commentSchema = new mongoose.Schema(
   {
-    user: rref("user"),
+    user: rref('user'),
     body: rs,
     rate: {
       ...n,
@@ -27,14 +27,15 @@ let commentSchema = new mongoose.Schema(
 
 let schema = new mongoose.Schema(
   {
-    user: rref("user"),
+    user: rref('user'),
     name: rs,
     description: s,
     images: [s],
     price: rn,
     discount: n,
     sizes: [sizeSchema],
-    categories: [ref("category")],
+    categories: [ref('category')],
+    subCategories: [ref('subcategory')],
     tags: [s],
     comments: [commentSchema],
     rating: n,
@@ -55,4 +56,4 @@ let schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("product", schema);
+module.exports = mongoose.model('product', schema);
