@@ -1,43 +1,44 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const path = require("path");
-const morgan = require("morgan");
-const winston = require("winston");
-const initApp = require("./utils/createDir").modules.initApp;
-require("winston-mongodb");
-require("express-async-errors");
-const config = require("config");
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
+const morgan = require('morgan');
+const winston = require('winston');
+const initApp = require('./utils/createDir').modules.initApp;
+require('winston-mongodb');
+require('express-async-errors');
+const config = require('config');
 // middlewares
-const ErrorMiddleware = require("./middlwares/error");
+const ErrorMiddleware = require('./middlwares/error');
 
-const User = require("./models/user");
+const User = require('./models/user');
 // routes
-const s = require("./controllers/socket");
-const UserRoutes = require("./routes/user");
-const ProductRoutes = require("./routes/product");
-const CategoryRoutes = require("./routes/category");
-const OrderRoutes = require("./routes/order");
-const CardRoutes = require("./routes/card");
-const Chat = require("./models/chat");
-const Order = require("./models/order");
-const FavoriteRoutes = require("./routes/favorite");
-const ChatRoutes = require("./routes/chat");
-const PlanRoutes = require("./routes/plan");
+const s = require('./controllers/socket');
+const UserRoutes = require('./routes/user');
+const ProductRoutes = require('./routes/product');
+const CategoryRoutes = require('./routes/category');
+const SubCategoryRoutes = require('./routes/subcategory');
+const OrderRoutes = require('./routes/order');
+const CardRoutes = require('./routes/card');
+const Chat = require('./models/chat');
+const Order = require('./models/order');
+const FavoriteRoutes = require('./routes/favorite');
+const ChatRoutes = require('./routes/chat');
+const PlanRoutes = require('./routes/plan');
 
 // init app
 const app = express();
-const http = require("http");
+const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
+const { Server } = require('socket.io');
 const io = new Server(server, {
   pingInterval: 10000,
   pingTimeout: 5000,
   maxHttpBufferSize: 1e4,
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
+    origin: '*',
+    methods: ['GET', 'POST'],
   },
 });
 
@@ -45,12 +46,13 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-if (app.get("env") === "development") app.use(morgan("tiny"));
+if (app.get('env') === 'development') app.use(morgan('tiny'));
 
 //  routes
 app.use(UserRoutes);
 app.use(ProductRoutes);
 app.use(CategoryRoutes);
+app.use(SubCategoryRoutes);
 app.use(OrderRoutes);
 app.use(CardRoutes);
 app.use(CardRoutes);
@@ -61,36 +63,36 @@ app.use(PlanRoutes);
 // error middleware
 app.use(ErrorMiddleware);
 // winston
-winston.add(new winston.transports.File({ filename: "error-log.log" }));
+winston.add(new winston.transports.File({ filename: 'error-log.log' }));
 winston.add(
   new winston.transports.MongoDB({
-    db: config.get("mongoURI"),
+    db: config.get('mongoURI'),
     options: {
       useUnifiedTopology: true,
     },
   })
 );
 // handle errors
-process.on("uncaughtException", (error) => winston.error(error.message));
-process.on("unhandledRejection", (error) => winston.error(error.message));
+process.on('uncaughtException', (error) => winston.error(error.message));
+process.on('unhandledRejection', (error) => winston.error(error.message));
 
 // views
-app.use(express.static(path.join(__dirname, "./public")));
-app.use(express.static(path.join(__dirname, "./views")));
+app.use(express.static(path.join(__dirname, './public')));
+app.use(express.static(path.join(__dirname, './views')));
 // app.get("/*", function (req, res) {
 //   res.sendFile(path.join(__dirname, "./views", "chat.html"));
 // });
 
 // connect to db
 mongoose.connect(
-  config.get("mongoURI"),
+  config.get('mongoURI'),
   {
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: true,
     useUnifiedTopology: true,
   },
-  () => console.log("DB Conected")
+  () => console.log('DB Conected')
 );
 
 const port = 7070;
@@ -98,8 +100,6 @@ const port = 7070;
 server.listen(port, (err) => {
   if (err) console.log(err.message);
   console.log(`Listen To ${port}`);
-
-  
 
   // io.on("connection", (socket) => {
   //   io.use(async (socket, next) => {

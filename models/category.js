@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
-const { s, rs, n, ref } = require("../utils/mongo");
+const mongoose = require('mongoose');
+const { s, rs, n, ref } = require('../utils/mongo');
 
 var schema = new mongoose.Schema(
   {
-    user: ref("user"),
+    user: ref('user'),
     name: { ...rs, unique: true },
     description: s,
     image: s,
@@ -15,4 +15,4 @@ var schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("category", schema);
+module.exports = mongoose.model('category', schema);
