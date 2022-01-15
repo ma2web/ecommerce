@@ -3,7 +3,7 @@ const { s, rs, ref } = require('../utils/mongo');
 
 var schema = new mongoose.Schema(
   {
-    category: ref('subcategory'),
+    subCategory: ref('subcategory'),
     name: { ...rs, unique: true },
     description: s,
   },

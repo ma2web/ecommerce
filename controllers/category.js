@@ -1,59 +1,39 @@
-const Category = require("../models/category");
-const { createValidator, updateValidator } = require("../validators/category");
+const Category = require('../models/category');
+const SubCategory = require('../models/subcategory');
+const { createValidator, updateValidator } = require('../validators/category');
 
 module.exports = {
   getAll: async (req, res) => {
-    let { user } = req.params;
+    const categories = await Category.find({});
+    // const subCategories = await SubCategory.find({}).populate('category');
 
-    let query = {};
+    let list = await Promise.all(
+      categories.map(async (category) => {
+        category = category.toJSON();
+        return {
+          ...category,
+          subCategories: await SubCategory.find({ category: category._id }),
+        };
+      })
+    );
 
-    if (user) query = { user };
-
-    if (user) {
-      let categories = await Category.find(query).populate("user");
-      res.send(categories);
-    } else {
-      await Category.aggregate([
-        {
-          $lookup: {
-            from: "products",
-            localField: "_id",
-            foreignField: "categories",
-            as: "products",
-          },
-        },
-        {
-          $project: {
-            _id: 1,
-            name: 1,
-            products: { $size: "$products" },
-            description: 1,
-            view: 1,
-            createdAt: 1,
-            updatedAt: 1,
-          },
-        },
-      ]).exec(function (err, result) {
-        if (err) throw err;
-        res.send(result);
-      });
-    }
+    res.send(list);
   },
   popular: async (req, res) => {
     await Category.aggregate([
       {
         $lookup: {
-          from: "products",
-          localField: "_id",
-          foreignField: "categories",
-          as: "products",
+          from: 'products',
+          localField: '_id',
+          foreignField: 'categories',
+          as: 'products',
         },
       },
       {
         $project: {
           _id: 1,
           name: 1,
-          products: { $size: "$products" },
+          products: { $size: '$products' },
           description: 1,
           view: 1,
           createdAt: 1,
@@ -67,9 +47,9 @@ module.exports = {
   },
   getOne: async (req, res) => {
     await Category.findOne({ _id: req.params.id })
-      .populate("user")
+      .populate('user')
       .then(async (data) => {
-        if (!data) return res.status(400).send("category not found");
+        if (!data) return res.status(400).send('category not found');
 
         if (req.user && req.user._id === data.user._id) {
           res.send(data);
@@ -106,10 +86,10 @@ module.exports = {
       },
       (err, data) => {
         if (err) {
-          return res.status(404).send({message: `Error: ` + err});
+          return res.status(404).send({ message: `Error: ` + err });
         } else {
           if (!data) {
-            return res.status(404).send({message: "not found"});
+            return res.status(404).send({ message: 'not found' });
           } else {
             return res.send(data);
           }
@@ -131,9 +111,9 @@ module.exports = {
         $set: req.body,
       },
       (err, data) => {
-        if (err) return res.status(404).send({message: `Error: ` + err});
+        if (err) return res.status(404).send({ message: `Error: ` + err });
 
-        return res.send({message: "category has been updated"});
+        return res.send({ message: 'category has been updated' });
       }
     );
   },

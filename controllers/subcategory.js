@@ -10,8 +10,10 @@ module.exports = {
     res.send(subcategories);
   },
   getOne: async (req, res) => {
-    const subCategory = await subCategory.findOne({ _id: req.params.id });
-    res.send(subCategory);
+    const subcategory = await subCategory.findOne({ _id: req.params.id });
+
+    console.log({ subcategory, id: req.params.id });
+    res.send(subcategory);
   },
   create: async (req, res) => {
     let { error } = createValidator(req.body);
