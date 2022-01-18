@@ -1,6 +1,6 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
-Joi.objectId = require("joi-objectid")(Joi);
+Joi.objectId = require('joi-objectid')(Joi);
 
 module.exports = {
   createValidator: (data) => {
@@ -12,6 +12,7 @@ module.exports = {
       discount: Joi.number(),
       images: Joi.array().items(Joi.string()),
       categories: Joi.array().items(Joi.string()),
+      subCategories: Joi.array().items(Joi.string()),
       colors: Joi.array(),
       sizes: Joi.array(),
       tags: Joi.array().items(Joi.string()),
@@ -43,6 +44,7 @@ module.exports = {
       categories: Joi.array().items(Joi.string()),
       discount: Joi.number(),
       view: Joi.number(),
+      subCategories: Joi.array().items(Joi.string()),
     });
 
     return schema.validate(data);

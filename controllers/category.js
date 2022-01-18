@@ -50,7 +50,7 @@ module.exports = {
       .populate('user')
       .then(async (data) => {
         if (!data) return res.status(400).send('category not found');
-        const subCategory = await SubCategory.findOne({ category: data._id });
+        const subCategories = await SubCategory.find({ category: data._id });
 
         if (req.user && req.user._id === data.user._id) {
           res.send(data);
@@ -61,7 +61,7 @@ module.exports = {
             (err, x) => {
               if (err) return res.status(400).send(err.message);
               data = data.toJSON();
-              res.send({ ...data, subCategory: subCategory.toJSON() });
+              res.send({ ...data, subCategories });
             }
           );
         }
