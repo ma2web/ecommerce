@@ -6,11 +6,8 @@ var schema = new mongoose.Schema(
     user: ref('user'),
     name: { ...rs, unique: true },
     description: s,
-    image: s,
-    view: {
-      ...n,
-      default: 0,
-    },
+    parent: rs,
+    category: rs,
   },
   { timestamps: true }
 );
