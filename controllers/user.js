@@ -55,6 +55,7 @@ module.exports = {
   register: async (req, res) => {
     let { email } = req.body;
 
+    console.log(req.body)
     let { error } = registerValidator(req.body);
     if (error) return res.status(400).send({ message: error.message });
 

@@ -3,11 +3,10 @@ const { s, rs, n, ref } = require('../utils/mongo');
 
 var schema = new mongoose.Schema(
   {
-    user: ref('user'),
-    name: { ...rs, unique: true },
+    name: s,
     description: s,
-    parent: rs,
-    category: rs,
+    parent: s,
+    slug: s,
   },
   { timestamps: true }
 );

@@ -1,10 +1,11 @@
-const Product = require("../models/product");
-const path = require("path");
-const fs = require("fs");
-const multer = require("multer");
+const Product = require('../models/product');
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 
 const uploadFileSize = 2 * 1024 * 1024;
-const fp = (id) => path.join(__dirname, `../public/uploads/admin/product/${id}`);
+const fp = (id) =>
+  path.join(__dirname, `../public/uploads/admin/product/${id}`);
 const destination = (req, file, callback) => {
   const { id } = req.params;
   callback(null, fp(id));
@@ -13,19 +14,19 @@ const filename = (req, file, callback) => {
   callback(
     null,
     file.fieldname +
-      "-" +
+      '-' +
       Date.now() +
-      file.originalname.substr(file.originalname.lastIndexOf(".") - 1)
+      file.originalname.substr(file.originalname.lastIndexOf('.') - 1)
   );
 };
 const fileFilter = (req, file, cb) => {
   [
-    "image/jpeg",
-    "image/bmp",
-    "image/png",
-    "image/svg+xml",
-    "image/tiff",
-    "image/webp",
+    'image/jpeg',
+    'image/bmp',
+    'image/png',
+    'image/svg+xml',
+    'image/tiff',
+    'image/webp',
   ].includes(file.mimetype)
     ? cb(null, true)
     : cb(null, false);
@@ -36,6 +37,7 @@ module.exports = {
   create: async (req, res) => {
     const { name, description, price, categories } = req.body;
     const productObj = new Product({
+      user: req.user._id,
       name,
       description,
       price,
@@ -59,14 +61,25 @@ module.exports = {
   },
   getAll: async (req, res) => {
     try {
-      const products = await Product.find();
+      const products = await Product.find()
+        .populate('user')
+        .populate('categories');
       res.status(200).json(products);
     } catch (err) {
       res.status(500).json(err);
     }
   },
+  getOne: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const product = await Product.findOne({ _id: id }).populate('user');
+      res.status(200).json(product);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
   getByCategory: async (req, res) => {
-    const category  = req.query.category;
+    const category = req.query.category;
     try {
       const products = await Product.find({ categories: category });
       res.status(200).json(products);
@@ -76,13 +89,14 @@ module.exports = {
   },
   update: async (req, res) => {
     const { id } = req.params;
-    const { name, description, price, categories } = req.body;
+    const { name, description, price, categories, images } = req.body;
     try {
       const productObj = await Product.findByIdAndUpdate(id, {
         name,
         description,
         price,
         categories,
+        images,
       });
       res.status(200).json(productObj);
     } catch (err) {
@@ -99,7 +113,7 @@ module.exports = {
           storage,
           fileFilter,
           limits: { fileSize: uploadFileSize },
-        }).single("image")(req, res, (err) => {
+        }).single('image')(req, res, (err) => {
           Product.findById(id, (err, data) => {
             if (!data.images) {
               data.images = [];
