@@ -18,15 +18,8 @@ module.exports = {
   },
   getAll: async (req, res) => {
     try {
-      const filters = await Filter.find({}).exec((err, filters) => {
-        if (err) res.status(500).json(err);
-
-        const filterList = createFilters(filters);
-        res.status(200).json({
-          filterList,
-          filters,
-        });
-      });
+      const filters = await Filter.find({});
+      res.status(200).json(filters);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -42,7 +35,8 @@ module.exports = {
   },
   getByCategory: async (req, res) => {
     try {
-      const filters = await Filter.find({ category: req.query.parent });
+      const {id} = req.params;
+      const filters = await Filter.find({ category: id });
       res.status(200).json(filters);
     } catch (err) {
       console.log(err);

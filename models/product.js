@@ -9,6 +9,11 @@ let schema = new mongoose.Schema(
     images: [s],
     price: rn,
     categories: ref('category'),
+    filters: [{
+      parent: ref('filter'),
+      value: s,
+      name: s,
+    }],
   },
   { timestamps: true }
 );

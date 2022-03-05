@@ -9,6 +9,8 @@ const {
   getByParent
 } = require('../controllers/category');
 
+const auth = require("../middlwares/auth");
+
 router.get('/api/categories', getAll);
 router.get('/api/category/:id', getOne);
 router.get('/api/category-parent', getByParent);
