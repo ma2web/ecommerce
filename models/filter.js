@@ -10,6 +10,12 @@ var schema = new mongoose.Schema(
         name: s,
       },
     ],
+    children: [
+      {
+        title: s,
+        values: [s],
+      },
+    ],
   },
   { timestamps: true }
 );
