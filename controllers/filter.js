@@ -35,7 +35,7 @@ module.exports = {
   },
   getByCategory: async (req, res) => {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
       const filters = await Filter.find({ category: id });
       res.status(200).json(filters);
     } catch (err) {
@@ -45,12 +45,13 @@ module.exports = {
   },
   update: async (req, res) => {
     const { id } = req.params;
-    const { name, category, values } = req.body;
+    const { name, category, values, children } = req.body;
     try {
       const filterObj = await Filter.findByIdAndUpdate(id, {
         name,
         category,
         values,
+        children,
       });
       res.status(200).json(filterObj);
     } catch (err) {
