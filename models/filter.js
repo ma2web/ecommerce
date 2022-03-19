@@ -12,7 +12,16 @@ var schema = new mongoose.Schema(
     ],
     children: {
       title: s,
-      values: [s],
+      values: [
+        {
+          value: s,
+          values: [
+            {
+              name: s,
+            },
+          ],
+        },
+      ],
     },
   },
   { timestamps: true }
