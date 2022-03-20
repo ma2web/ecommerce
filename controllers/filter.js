@@ -46,7 +46,7 @@ module.exports = {
   update: async (req, res) => {
     const { id } = req.params;
     try {
-      const filterObj = await Filter.findByIdAndUpdate(id, req.body);
+      const filterObj = await Filter.findByIdAndUpdate(id, { $set: req.body });
       res.status(200).json(filterObj);
     } catch (err) {
       res.status(500).json(err);
@@ -65,7 +65,10 @@ module.exports = {
     const { id, valueId } = req.params;
     try {
       const filter = await Filter.findById(id);
-      const values = filter.values.filter((el) => el.name == valueId);
+      console.log(filter.children?.values);
+      const values = filter.children?.values.filter(
+        (el) => el.value == valueId
+      );
       res.status(200).json(values);
     } catch (err) {
       res.status(500).json(err);
