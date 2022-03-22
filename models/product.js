@@ -14,6 +14,7 @@ let schema = new mongoose.Schema(
       value: s,
       name: s,
     }],
+    subFilter: s
   },
   { timestamps: true }
 );
