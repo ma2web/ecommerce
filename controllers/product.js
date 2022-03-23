@@ -35,14 +35,15 @@ const storage = multer.diskStorage({ destination, filename });
 
 module.exports = {
   create: async (req, res) => {
-    const { name, description, price, categories, filters } = req.body;
+    const { name, description, price, categories, filters, subFilter } = req.body;
     const productObj = new Product({
       user: req.user._id,
       name,
       description,
       price,
       categories,
-      filters
+      filters,
+      subFilter
     });
     try {
       const product = await productObj.save();
