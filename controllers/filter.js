@@ -65,7 +65,7 @@ module.exports = {
     const { id, valueId } = req.params;
     try {
       const filter = await Filter.findById(id);
-      console.log(filter.children?.values);
+
       const values = filter.children?.values.filter(
         (el) => el.value == valueId
       );

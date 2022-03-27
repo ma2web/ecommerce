@@ -35,7 +35,8 @@ const storage = multer.diskStorage({ destination, filename });
 
 module.exports = {
   create: async (req, res) => {
-    const { name, description, price, categories, filters, subFilter } = req.body;
+    const { name, description, price, categories, filters, subFilter } =
+      req.body;
     const productObj = new Product({
       user: req.user._id,
       name,
@@ -43,7 +44,7 @@ module.exports = {
       price,
       categories,
       filters,
-      subFilter
+      subFilter,
     });
     try {
       const product = await productObj.save();
@@ -91,7 +92,8 @@ module.exports = {
   },
   update: async (req, res) => {
     const { id } = req.params;
-    const { name, description, price, categories, images, filters } = req.body;
+    const { name, description, price, categories, images, filters, subFilter } =
+      req.body;
     try {
       const productObj = await Product.findByIdAndUpdate(id, {
         name,
@@ -99,7 +101,8 @@ module.exports = {
         price,
         categories,
         images,
-        filters
+        filters,
+        subFilter,
       });
       res.status(200).json(productObj);
     } catch (err) {
