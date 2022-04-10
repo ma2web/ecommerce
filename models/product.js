@@ -1,22 +1,30 @@
-const mongoose = require('mongoose');
-const { s, rs, rn, rref, ref } = require('../utils/mongo');
+const mongoose = require("mongoose");
+const { s, rs, rn, rref, ref } = require("../utils/mongo");
 
 let schema = new mongoose.Schema(
   {
-    user: rref('user'),
+    user: rref("user"),
     name: rs,
     description: s,
     images: [s],
     price: rn,
-    categories: ref('category'),
-    filters: [{
-      parent: ref('filter'),
-      value: s,
-      name: s,
-    }],
-    subFilter: s
+    categories: ref("category"),
+    filters: [
+      {
+        parent: ref("filter"),
+        value: s,
+        name: s,
+      },
+    ],
+    subFilter: [
+      {
+        parent: s,
+        value: s,
+        title: s,
+      },
+    ],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('product', schema);
+module.exports = mongoose.model("product", schema);
