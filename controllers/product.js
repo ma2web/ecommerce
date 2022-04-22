@@ -82,9 +82,10 @@ module.exports = {
     }
   },
   getByCategory: async (req, res) => {
-    const category = req.query.category;
+    const category = req.params.category;
     try {
-      const products = await Product.find({ categories: category });
+      const products = await Product.find({ categories: category }).populate('user')
+      .populate('categories');
       res.status(200).json(products);
     } catch (err) {
       res.status(500).json(err);
@@ -137,4 +138,7 @@ module.exports = {
       }
     );
   },
+  filter: async (req, res) => {
+    
+  }
 };

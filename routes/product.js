@@ -18,7 +18,7 @@ router.delete('/api/product/:id', remove);
 router.get('/api/products', getAll);
 router.get('/api/product/:id', getOne);
 router.put('/api/product/:id', update);
-router.get('/api/products/category', getByCategory);
+router.get('/api/products/category/:category', getByCategory);
 router.post('/api/product/upload/:id', uploadImage);
 
 module.exports = router;
