@@ -84,8 +84,9 @@ module.exports = {
   getByCategory: async (req, res) => {
     const category = req.params.category;
     try {
-      const products = await Product.find({ categories: category }).populate('user')
-      .populate('categories');
+      const products = await Product.find({ categories: category })
+        .populate('user')
+        .populate('categories');
       res.status(200).json(products);
     } catch (err) {
       res.status(500).json(err);
@@ -139,8 +140,8 @@ module.exports = {
     );
   },
   filter: async (req, res) => {
-    const { categories, filters } = req.body;
     try {
+      const { categories, filters } = req.body;
       const products = await Product.find({
         categories,
         filters,
@@ -148,6 +149,8 @@ module.exports = {
 
       console.log(products);
       res.status(200).json(products);
+    } catch (err) {
+      res.status(500).json(err);
     }
-  }
+  },
 };
