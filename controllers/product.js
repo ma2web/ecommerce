@@ -142,20 +142,11 @@ module.exports = {
   filter: async (req, res) => {
     try {
       const { categories, filters } = req.body;
-      const products = await Product.find();
-      const filteredProducts = products.filter((product) => {
-        if (categories.length > 0) {
-          return product.categories.some((category) =>
-            categories.includes(category)
-          );
-        }
-        if (filters.length > 0) {
-          return product.filters.some((filter) => filters.includes(filter));
-        }
+      const products = await Product.find({
+        categories: { $in: categories },
+        filters: { $in: filters },
       });
-
-      console.log(products);
-      res.status(200).json(filteredProducts);
+      res.status(200).json(products);
     } catch (err) {
       res.status(500).json(err);
     }
