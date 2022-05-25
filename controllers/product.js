@@ -143,8 +143,8 @@ module.exports = {
     try {
       const { categories, filters } = req.body;
       const products = await Product.find({
-        categories: { $in: categories },
-        filters: { $in: filters },
+        categories,
+        filters: { $elemMatch: filters },
       });
       res.status(200).json(products);
     } catch (err) {
