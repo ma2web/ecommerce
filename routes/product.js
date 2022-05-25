@@ -8,6 +8,7 @@ const {
   getOne,
   update,
   getByCategory,
+  filter
 } = require('../controllers/product');
 
 const auth = require('../middlwares/auth');
@@ -20,5 +21,6 @@ router.get('/api/product/:id', getOne);
 router.put('/api/product/:id', update);
 router.get('/api/products/category/:category', getByCategory);
 router.post('/api/product/upload/:id', uploadImage);
+router.post('/api/product/filter', filter);
 
 module.exports = router;

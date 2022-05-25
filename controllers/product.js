@@ -139,6 +139,15 @@ module.exports = {
     );
   },
   filter: async (req, res) => {
-    
+    const { categories, filters } = req.body;
+    try {
+      const products = await Product.find({
+        categories,
+        filters,
+      }).populate('user');
+
+      console.log(products);
+      res.status(200).json(products);
+    }
   }
 };
