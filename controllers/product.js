@@ -144,7 +144,9 @@ module.exports = {
       const { categories, filters } = req.body;
       const products = await Product.find({
         categories,
-        filters: { $elemMatch: filters },
+        filters: filters?.map((filter) => {
+          return { $elemMatch: { value: filter.value } };
+        }),
       });
       res.status(200).json(products);
     } catch (err) {
