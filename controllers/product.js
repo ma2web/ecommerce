@@ -143,14 +143,24 @@ module.exports = {
     try {
       const { categories, filters } = req.body;
 
+      const products1 = await Product.find();
+
+      
+
       const filteredFilters = filters.map((filter) => {
         return {
           value: filter,
         }
       })
+
+      console.log(
+        {
+          categories, filteredFilters
+        }
+      )
       
       const products = await Product.find({
-        categories: categories,
+        categories,
         filter: {
           $in: filteredFilters,
         },
