@@ -142,12 +142,21 @@ module.exports = {
   filter: async (req, res) => {
     try {
       const { categories, filters } = req.body;
+
+      const filteredFilters = filters.map((filter) => {
+        return {
+          value: filter,
+        }
+      })
+      
       const products = await Product.find({
-        categories,
-        filters: filters?.map((filter) => {
-          return { $elemMatch: { value: filter.value } };
-        }),
+        categories: categories,
+        filter: {
+          $in: filteredFilters,
+        },
       });
+
+
       res.status(200).json(products);
     } catch (err) {
       res.status(500).json(err);
