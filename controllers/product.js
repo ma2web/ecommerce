@@ -2,7 +2,7 @@ const Product = require('../models/product');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
-
+const ObjectId = require('mongodb').ObjectID;
 const uploadFileSize = 2 * 1024 * 1024;
 const fp = (id) =>
   path.join(__dirname, `../public/uploads/admin/product/${id}`);
@@ -142,13 +142,44 @@ module.exports = {
   filter: async (req, res) => {
     try {
       const { categories, filters } = req.body;
+      let products;
 
-      const products = await Product.find({
-        categories,
-      });
+      if (filters.length > 0) {
+        let targ_cat = categories;
+        let any_one_of = filters;
+
+        let or_list = [];
+
+        any_one_of.forEach(function (f) {
+          or_list.push({
+            $and: [
+              { $eq: [f['name'], '$$this.name'] },
+              { $eq: [f['value'], '$$this.value'] },
+            ],
+          });
+        });
+        let or_expr = or_list;
+
+        products = await Product.aggregate([
+          { $match: { categories: new ObjectId(targ_cat) } },
+          {
+            $addFields: {
+              filters: { $filter: { input: '$filters', cond: or_expr } },
+            },
+          },
+          {
+            $match: {
+              $expr: { $gt: [{ $size: '$filters' }, 0] },
+            },
+          },
+        ]);
+      } else {
+        products = await Product.find({ categories });
+      }
 
       res.status(200).json(products);
     } catch (err) {
+      console.log(err);
       res.status(500).json(err);
     }
   },
