@@ -158,7 +158,11 @@ module.exports = {
             ],
           });
         });
-        let or_expr = or_list;
+        let or_expr = { $or: or_list };
+
+        console.log({
+          any: or_list,
+        });
 
         products = await Product.aggregate([
           { $match: { categories: new ObjectId(targ_cat) } },
