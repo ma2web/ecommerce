@@ -7,7 +7,6 @@ module.exports = {
 
     let whatchlist = await Whatchlist.find({ user: userId })
       .populate("user")
-      .populate("product");
 
     res.status(200).send(whatchlist);
   },

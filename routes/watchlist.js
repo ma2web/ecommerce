@@ -8,8 +8,8 @@ const {
 
 const auth = require('../middlwares/auth');
 
-router.post('/api/user/watchlist/list', auth, getAll);
+router.get('/api/user/watchlist/list', auth, getAll);
 router.post('/api/user/watchlist/add', auth, addToWatchlist);
-router.post('/api/user/watchlist/remove', auth, removeFromWatchlist);
+router.delete('/api/user/watchlist/remove', auth, removeFromWatchlist);
 
 module.exports = router;
