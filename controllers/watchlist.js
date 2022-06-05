@@ -6,6 +6,7 @@ module.exports = {
 
 
     let whatchlist = await Whatchlist.find({ user: userId })
+      .populate("product")
       .populate("user")
 
     res.status(200).send(whatchlist);
@@ -30,12 +31,16 @@ module.exports = {
     }
   },
   removeFromWatchlist: async (req, res) => {
+    let id = req.params.id;
     let userId = req.user._id;
-    let productId = req.body.productId;
+
+    console.log({
+      userId,
+      id,
+    })
 
     let whatchlist = await Whatchlist.findOneAndDelete({
-      user: userId,
-      product: productId,
+      product: id
     });
 
     if (!whatchlist) {
@@ -43,5 +48,5 @@ module.exports = {
     }
 
     res.status(200).send(whatchlist);
-  }
+  },
 };
