@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 module.exports = {
   s: { type: String },
@@ -18,4 +18,5 @@ module.exports = {
       required: true,
     };
   },
+  b: { type: Boolean, default: false },
 };

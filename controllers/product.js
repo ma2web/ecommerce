@@ -94,8 +94,16 @@ module.exports = {
   },
   update: async (req, res) => {
     const { id } = req.params;
-    const { name, description, price, categories, images, filters, subFilter } =
-      req.body;
+    const {
+      name,
+      description,
+      price,
+      categories,
+      images,
+      filters,
+      subFilter,
+      published,
+    } = req.body;
     try {
       const productObj = await Product.findByIdAndUpdate(id, {
         name,
@@ -105,6 +113,7 @@ module.exports = {
         images,
         filters,
         subFilter,
+        published,
       });
       res.status(200).json(productObj);
     } catch (err) {
