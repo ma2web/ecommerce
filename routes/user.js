@@ -20,6 +20,7 @@ const {
   getAllUsers,
   userNormalLogin,
   userNormalRegister,
+  deleteUser,
 } = require('../controllers/user');
 const auth = require('../middlwares/auth');
 const admin = require('../middlwares/admin');
@@ -30,6 +31,7 @@ router.post('/api/user/signup', userRegister);
 router.post('/api/user/signin', userLogin);
 router.get('/api/user/me', auth, me);
 router.put('/api/user/:id', auth, update);
+router.delete('/api/user/:id', auth, deleteUser);
 router.post('/api/user/upload/:id', upload);
 router.post('/api/user/otp', sendCode);
 router.post('/api/user/otp-signin', sendCodeToUsers);

@@ -521,4 +521,15 @@ module.exports = {
 
     res.header('x-auth-token', token).send({ ...data, token });
   },
+  deleteUser: async (req, res) => {
+    let { id } = req.params;
+    try {
+      let user = await User.findByIdAndDelete({
+        _id: id,
+      });
+      res.send(user);
+    } catch (err) {
+      res.status(500).send(err);
+    }
+  },
 };
