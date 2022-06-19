@@ -35,8 +35,15 @@ const storage = multer.diskStorage({ destination, filename });
 
 module.exports = {
   create: async (req, res) => {
-    const { name, description, price, categories, filters, subFilter } =
-      req.body;
+    const {
+      name,
+      description,
+      price,
+      categories,
+      filters,
+      subFilter,
+      discount,
+    } = req.body;
     const productObj = new Product({
       user: req.user._id,
       name,
@@ -45,6 +52,7 @@ module.exports = {
       categories,
       filters,
       subFilter,
+      discount,
     });
     try {
       const product = await productObj.save();
@@ -103,6 +111,7 @@ module.exports = {
       filters,
       subFilter,
       published,
+      discount,
     } = req.body;
     try {
       const productObj = await Product.findByIdAndUpdate(id, {
@@ -114,6 +123,7 @@ module.exports = {
         filters,
         subFilter,
         published,
+        discount,
       });
       res.status(200).json(productObj);
     } catch (err) {
@@ -168,10 +178,6 @@ module.exports = {
           });
         });
         let or_expr = { $or: or_list };
-
-        console.log({
-          any: or_list,
-        });
 
         products = await Product.aggregate([
           { $match: { categories: new ObjectId(targ_cat) } },

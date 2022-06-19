@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { s, rs, rn, rref, ref, b } = require('../utils/mongo');
+const { s, rs, rn, rref, ref, b, n } = require('../utils/mongo');
 
 let schema = new mongoose.Schema(
   {
@@ -8,6 +8,7 @@ let schema = new mongoose.Schema(
     description: s,
     images: [s],
     price: rn,
+    discount: n,
     categories: ref('category'),
     filters: [
       {
