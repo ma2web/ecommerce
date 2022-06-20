@@ -172,12 +172,17 @@ module.exports = {
         any_one_of.forEach(function (f) {
           or_list.push({
             $and: [
-              { $eq: [f['name'], '$$this.name'] },
+              // { $eq: [f['name'], '$$this.name'] },
               { $eq: [f['value'], '$$this.value'] },
             ],
           });
         });
         let or_expr = { $or: or_list };
+
+        console.log({
+          any: or_list,
+          or_expr,
+        });
 
         products = await Product.aggregate([
           { $match: { categories: new ObjectId(targ_cat) } },
@@ -194,6 +199,7 @@ module.exports = {
         ]);
       } else {
         products = await Product.find({ categories });
+        console.log('asdasd');
       }
 
       res.status(200).json(products);
