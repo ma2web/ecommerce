@@ -179,11 +179,6 @@ module.exports = {
         });
         let or_expr = { $or: or_list };
 
-        console.log({
-          any: or_list,
-          or_expr,
-        });
-
         products = await Product.aggregate([
           { $match: { categories: new ObjectId(targ_cat) } },
           {
@@ -201,6 +196,8 @@ module.exports = {
         products = await Product.find({ categories });
         console.log('asdasd');
       }
+
+      console.log(products);
 
       res.status(200).json(products);
     } catch (err) {
