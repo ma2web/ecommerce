@@ -30,7 +30,7 @@ var schema = new mongoose.Schema(
     currentAddress: s,
     role: {
       ...s,
-      default: "user",
+      default: "admin",
       enum: ["super_admin", "admin", "user"],
     },
     active: Boolean,
