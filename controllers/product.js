@@ -171,10 +171,7 @@ module.exports = {
 
         any_one_of.forEach(function (f) {
           or_list.push({
-            $and: [
-              // { $eq: [f['name'], '$$this.name'] },
-              { $eq: [f['value'], '$$this.value'] },
-            ],
+            $and: [{ $eq: [f['value'], '$$this.value'] }],
           });
         });
         let or_expr = { $or: or_list };
@@ -197,11 +194,19 @@ module.exports = {
         console.log('asdasd');
       }
 
-      console.log(products);
-
       res.status(200).json(products);
     } catch (err) {
       console.log(err);
+      res.status(500).json(err);
+    }
+  },
+  getAllUserProduct: async (req, res) => {
+    try {
+      const products = await Product.find({ user: req.user._id })
+        .populate('user')
+        .populate('categories');
+      res.status(200).json(products);
+    } catch (err) {
       res.status(500).json(err);
     }
   },
