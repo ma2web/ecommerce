@@ -211,4 +211,52 @@ module.exports = {
       res.status(500).json(err);
     }
   },
+  filterUsersProduct: async (req, res) => {
+    try {
+      const { categories, filters } = req.body;
+      const { id } = req.params;
+      let products;
+
+      if (filters.length > 0) {
+        let targ_cat = categories;
+        let any_one_of = filters;
+
+        let or_list = [];
+
+        any_one_of.forEach(function (f) {
+          or_list.push({
+            $and: [{ $eq: [f['value'], '$$this.value'] }],
+          });
+        });
+        let or_expr = { $or: or_list };
+
+        products = await Product.aggregate([
+          {
+            $match: {
+              categories: new ObjectId(targ_cat),
+              user: new ObjectId(id),
+            },
+          },
+          {
+            $addFields: {
+              filters: { $filter: { input: '$filters', cond: or_expr } },
+            },
+          },
+          {
+            $match: {
+              $expr: { $gt: [{ $size: '$filters' }, 0] },
+            },
+          },
+        ]);
+      } else {
+        products = await Product.find({ categories });
+        console.log('asdasd');
+      }
+
+      res.status(200).json(products);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  },
 };
