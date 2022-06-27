@@ -248,8 +248,7 @@ module.exports = {
           },
         ]);
       } else {
-        products = await Product.find({ categories });
-        console.log('asdasd');
+        products = await Product.find({ categories, user });
       }
 
       res.status(200).json(products);
