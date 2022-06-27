@@ -202,7 +202,8 @@ module.exports = {
   },
   getAllUserProduct: async (req, res) => {
     try {
-      const products = await Product.find({ user: req.user._id })
+      const { id } = req.params;
+      const products = await Product.find({ user: id })
         .populate('user')
         .populate('categories');
       res.status(200).json(products);
