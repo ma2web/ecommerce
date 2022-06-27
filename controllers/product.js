@@ -213,8 +213,7 @@ module.exports = {
   },
   filterUsersProduct: async (req, res) => {
     try {
-      const { categories, filters } = req.body;
-      const { id } = req.params;
+      const { categories, filters, user } = req.body;
       let products;
 
       if (filters.length > 0) {
@@ -234,7 +233,7 @@ module.exports = {
           {
             $match: {
               categories: new ObjectId(targ_cat),
-              user: new ObjectId(id),
+              user: new ObjectId(user),
             },
           },
           {
