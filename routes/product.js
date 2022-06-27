@@ -10,6 +10,7 @@ const {
   getByCategory,
   filter,
   getAllUserProduct,
+  filterUsersProduct,
 } = require('../controllers/product');
 
 const auth = require('../middlwares/auth');
@@ -24,5 +25,6 @@ router.put('/api/product/:id', update);
 router.get('/api/products/category/:category', getByCategory);
 router.post('/api/product/upload/:id', uploadImage);
 router.post('/api/product/filter', filter);
+router.post('/api/product/filter/:id', filterUsersProduct);
 
 module.exports = router;
