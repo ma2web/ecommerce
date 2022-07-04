@@ -164,34 +164,25 @@ module.exports = {
       let products;
 
       if (filters.length > 0) {
-        let targ_cat = categories;
-        let any_one_of = filters;
-
-        let or_list = [];
-
-        any_one_of.forEach(function (f) {
-          or_list.push({
-            $and: [{ $eq: [f['value'], '$$this.value'] }],
-          });
+        const orItems = filters.map((item) => {
+          return {
+            filters: {
+              $elemMatch: {
+                value: item.value,
+              },
+            },
+          };
         });
-        let or_expr = { $or: or_list };
 
-        products = await Product.aggregate([
-          { $match: { categories: new ObjectId(targ_cat) } },
-          {
-            $addFields: {
-              filters: { $filter: { input: '$filters', cond: or_expr } },
-            },
-          },
-          {
-            $match: {
-              $expr: { $gt: [{ $size: '$filters' }, 0] },
-            },
-          },
-        ]);
+        products = await Product.find({
+          categories: categories,
+          $and: orItems,
+        });
+
+        console.log('Category and Filter', products);
       } else {
+        console.log('Category Only');
         products = await Product.find({ categories });
-        console.log('asdasd');
       }
 
       res.status(200).json(products);
