@@ -177,11 +177,9 @@ module.exports = {
         products = await Product.find({
           categories: categories,
           $and: orItems,
-        });
+        }).populate('user');
 
-        console.log('Category and Filter', products);
       } else {
-        console.log('Category Only');
         products = await Product.find({ categories });
       }
 
@@ -223,11 +221,9 @@ module.exports = {
           categories: categories,
           user: id,
           $and: orItems,
-        });
+        }).populate('user');
 
-        console.log('Category and Filter', products);
       } else {
-        console.log('Category Only');
         products = await Product.find({ categories, user: id });
       }
 
