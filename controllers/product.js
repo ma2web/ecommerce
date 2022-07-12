@@ -178,9 +178,8 @@ module.exports = {
           categories: categories,
           $and: orItems,
         }).populate('user');
-
       } else {
-        products = await Product.find({ categories });
+        products = await Product.find({ categories }).populate('user');
       }
 
       res.status(200).json(products);
@@ -222,9 +221,10 @@ module.exports = {
           user: id,
           $and: orItems,
         }).populate('user');
-
       } else {
-        products = await Product.find({ categories, user: id });
+        products = await Product.find({ categories, user: id }).populate(
+          'user'
+        );
       }
 
       res.status(200).json(products);
