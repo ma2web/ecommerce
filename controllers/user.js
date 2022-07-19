@@ -461,7 +461,6 @@ module.exports = {
     if (email) {
       const user = await User.findOne({ email });
       if (user) return res.status(400).send({ message: 'user already exist' });
-
     } else {
       const user = await User.findOne({ phoneNumber });
       if (user) return res.status(400).send({ message: 'user already exist' });
@@ -497,45 +496,40 @@ module.exports = {
 
     // let { error } = loginValidator(req.body);
     // if (error) return res.status(400).send({ message: error.message });
+    let user;
 
     if (email) {
-      const user = await User.findOne({ email });
+      user = await User.findOne({ email });
       if (!user)
         return res
           .status(400)
           .send({ message: 'کاربری با این اطلاعات یافت نشد' });
-  
+
       const compare = await bcrypt.compare(password, user.password);
-  
+
       if (!compare)
         return res.status(400).send({ message: 'wrong username or password' });
     } else {
-      const user = await User.findOne({ phoneNumber });
+      user = await User.findOne({ phoneNumber });
       if (!user)
         return res
           .status(400)
           .send({ message: 'کاربری با این اطلاعات یافت نشد' });
-  
+
       const compare = await bcrypt.compare(password, user.password);
-  
+
       if (!compare)
         return res.status(400).send({ message: 'wrong username or password' });
     }
-    
 
     const token = user.generateAuthToken();
+    let data;
 
-
-    let data = pick(user, [
-      '_id',
-      'name',
-      'email',
-      'countryCode',
-      'phoneNumber',
-      'password',
-      'firstName',
-      'lastName',
-    ]);
+    if (email) {
+      data = pick(user, ['_id', 'email', 'password']);
+    } else {
+      data = pick(user, ['_id', 'countryCode', 'phoneNumber', 'password']);
+    }
 
     res.header('x-auth-token', token).send({ ...data, token });
   },
