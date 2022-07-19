@@ -99,8 +99,8 @@ module.exports = {
   login: async (req, res) => {
     let { email, password } = req.body;
 
-    let { error } = loginValidator(req.body);
-    if (error) return res.status(400).send({ message: error.message });
+    // let { error } = loginValidator(req.body);
+    // if (error) return res.status(400).send({ message: error.message });
 
     const user = await User.findOne({ email });
     if (!user)
@@ -453,14 +453,19 @@ module.exports = {
     res.send(users);
   },
   userNormalRegister: async (req, res) => {
-    let { email } = req.body;
-    console.log(req.body);
+    let { email, phoneNumber } = req.body;
 
-    let { error } = registerValidator(req.body);
-    if (error) return res.status(400).send({ message: error.message });
+    // let { error } = registerValidator(req.body);
+    // if (error) return res.status(400).send({ message: error.message });
 
-    const user = await User.findOne({ email });
-    if (user) return res.status(400).send({ message: 'user already exist' });
+    if (email) {
+      const user = await User.findOne({ email });
+      if (user) return res.status(400).send({ message: 'user already exist' });
+
+    } else {
+      const user = await User.findOne({ phoneNumber });
+      if (user) return res.status(400).send({ message: 'user already exist' });
+    }
 
     let newUser = new User(
       pick(req.body, [
@@ -488,25 +493,38 @@ module.exports = {
     res.header('x-auth-token', token).send({ ...data, token });
   },
   userNormalLogin: async (req, res) => {
-    let { email, password } = req.body;
+    let { email, password, phoneNumber } = req.body;
 
-    let { error } = loginValidator(req.body);
-    if (error) return res.status(400).send({ message: error.message });
+    // let { error } = loginValidator(req.body);
+    // if (error) return res.status(400).send({ message: error.message });
 
-    const user = await User.findOne({ email });
-    if (!user)
-      return res
-        .status(400)
-        .send({ message: 'کاربری با این اطلاعات یافت نشد' });
-
-    const compare = await bcrypt.compare(password, user.password);
-
-    if (!compare)
-      return res.status(400).send({ message: 'wrong username or password' });
+    if (email) {
+      const user = await User.findOne({ email });
+      if (!user)
+        return res
+          .status(400)
+          .send({ message: 'کاربری با این اطلاعات یافت نشد' });
+  
+      const compare = await bcrypt.compare(password, user.password);
+  
+      if (!compare)
+        return res.status(400).send({ message: 'wrong username or password' });
+    } else {
+      const user = await User.findOne({ phoneNumber });
+      if (!user)
+        return res
+          .status(400)
+          .send({ message: 'کاربری با این اطلاعات یافت نشد' });
+  
+      const compare = await bcrypt.compare(password, user.password);
+  
+      if (!compare)
+        return res.status(400).send({ message: 'wrong username or password' });
+    }
+    
 
     const token = user.generateAuthToken();
 
-    console.log(user);
 
     let data = pick(user, [
       '_id',
